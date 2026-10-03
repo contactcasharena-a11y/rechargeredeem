@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash Arena - Recharge & Cashout Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            yellow: '#FFD700',
+                            yellowHover: '#E6C200',
+                            navyDark: '#0B132B',
+                            navyCard: '#1C2541',
+                            navyAccent: '#3A506B',
+                            border: '#2C3E55',
+                            success: '#10B981'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0B132B;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .yellow-glow {
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white flex items-center justify-center p-3 sm:p-6">
+
+    <div class="w-full max-w-lg bg-brand-navyCard rounded-2xl border border-brand-border shadow-2xl overflow-hidden yellow-glow my-auto">
+        
+        <!-- Header Banner -->
+        <div class="bg-brand-navyAccent p-6 text-center border-b-4 border-brand-yellow relative">
+            <div class="flex justify-center items-center gap-3 mb-1">
+                <i class="fa-solid fa-crown text-brand-yellow text-3xl"></i>
+                <h1 class="text-3xl font-black tracking-wider text-brand-yellow uppercase">Cash Arena</h1>
+            </div>
+            <p class="text-xs sm:text-sm text-gray-300 font-semibold tracking-wide">Official Player Recharge & Cashout Portal</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex bg-brand-navyDark border-b border-brand-border">
+            <button id="tab-recharge" onclick="switchTab('recharge')" class="flex-1 py-3.5 px-2 text-center font-bold text-brand-yellow border-b-4 border-brand-yellow bg-brand-navyCard transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-bolt"></i> <span>Recharge</span>
+            </button>
+            <button id="tab-cashout" onclick="switchTab('cashout')" class="flex-1 py-3.5 px-2 text-center font-bold text-gray-400 border-b-4 border-transparent hover:text-gray-200 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-money-bill-transfer"></i> <span>Cashout</span>
+            </button>
+        </div>
+
+        <div class="p-5 sm:p-7">
+            
+            <!-- RECHARGE FORM -->
+            <form id="rechargeForm" onsubmit="handleFormSubmit(event, 'deposit')" class="space-y-4">
+                
+                <!-- Payment Method Selection -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-2">
+                        1. Select Payment Method
+                    </label>
+                    <select id="depositPayment" onchange="togglePaymentDetails()" class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white font-semibold focus:border-brand-yellow focus:outline-none transition cursor-pointer">
+                        <option value="chime">Chime</option>
+                        <option value="venmo">Venmo</option>
+                    </select>
+                </div>
+
+                <!-- Chime Payment Tag Card -->
+                <div id="chimeDetails" class="bg-brand-navyDark p-4 rounded-xl border-2 border-brand-yellow/40 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider">
+                            <i class="fa-solid fa-credit-card mr-1"></i> Active Chime Tag
+                        </span>
+                        <span class="text-xs text-gray-400 font-medium">Mahrukh Khalid</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-brand-navyCard p-2.5 rounded-lg border border-brand-border">
+                        <span class="text-lg font-mono font-extrabold text-white tracking-wide">$Mahrukh-Khalid</span>
+                        <button type="button" onclick="copyTag('$Mahrukh-Khalid', this)" class="bg-brand-yellow hover:bg-brand-yellowHover text-brand-navyDark px-3 py-1.5 rounded-md font-extrabold text-xs transition flex items-center gap-1 shadow">
+                            <i class="fa-solid fa-copy"></i> <span>Copy</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Venmo Payment Tag Card -->
+                <div id="venmoDetails" class="bg-brand-navyDark p-4 rounded-xl border-2 border-brand-yellow/40 space-y-2 hidden">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-brand-yellow uppercase tracking-wider">
+                            <i class="fa-solid fa-wallet mr-1"></i> Active Venmo Tag
+                        </span>
+                        <span class="text-xs text-gray-400 font-medium">Yushua Hussain</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-brand-navyCard p-2.5 rounded-lg border border-brand-border">
+                        <span class="text-lg font-mono font-extrabold text-white tracking-wide">@Yushua-1</span>
+                        <button type="button" onclick="copyTag('@Yushua-1', this)" class="bg-brand-yellow hover:bg-brand-yellowHover text-brand-navyDark px-3 py-1.5 rounded-md font-extrabold text-xs transition flex items-center gap-1 shadow">
+                            <i class="fa-solid fa-copy"></i> <span>Copy</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Instructions Box -->
+                <div class="bg-brand-yellow/10 border border-brand-yellow/30 p-3.5 rounded-xl text-xs text-gray-300 space-y-1">
+                    <p class="font-bold text-brand-yellow flex items-center gap-1">
+                        <i class="fa-solid fa-circle-info"></i> Instructions:
+                    </p>
+                    <ul class="list-disc list-inside space-y-0.5 text-gray-300">
+                        <li>Copy tag above & send payment via Chime / Venmo app.</li>
+                        <li>Fill out details below and attach payment screenshot.</li>
+                        <li>Our team will verify & notify you on Facebook when loaded!</li>
+                    </ul>
+                </div>
+
+                <!-- Full Name -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input type="text" id="depositName" placeholder="Enter your full name" required class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition">
+                </div>
+
+                <!-- Game Selection -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Select Game Platform</label>
+                    <select id="depositGame" required class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition cursor-pointer">
+                        <option value="🐼 Ultra Thunder">🐼 Ultra Thunder</option>
+                        <option value="👑 Orion Stars">👑 Orion Stars</option>
+                        <option value="🌟 Juwa">🌟 Juwa</option>
+                        <option value="🔥 Juwa 2.0">🔥 Juwa 2.0</option>
+                        <option value="🏰 Game Vault">🏰 Game Vault</option>
+                        <option value="🎰 Vegas Sweeps">🎰 Vegas Sweeps</option>
+                        <option value="🔥 Fire Kirin">🔥 Fire Kirin</option>
+                        <option value="🐼 Panda Master">🐼 Panda Master</option>
+                        <option value="🌌 Milky Way">🌌 Milky Way</option>
+                        <option value="⚡ Dragon Fury">⚡ Dragon Fury</option>
+                        <option value="🎮 E-Game">🎮 E-Game</option>
+                        <option value="🚀 Orion Strike">🚀 Orion Strike</option>
+                        <option value="🎩 Mr. All in One">🎩 Mr. All in One</option>
+                        <option value="💎 Noble">💎 Noble</option>
+                        <option value="🎰 Cash Machine">🎰 Cash Machine</option>
+                    </select>
+                </div>
+
+                <!-- Game Username -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Game Username</label>
+                    <input type="text" id="depositUsername" placeholder="Enter your game ID / username" required class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition">
+                </div>
+
+                <!-- Amount Deposited -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Amount Sent ($)</label>
+                    <input type="number" id="depositAmount" min="1" step="any" placeholder="e.g. 50" required class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition">
+                </div>
+
+                <!-- Transaction ID (Venmo Only) -->
+                <div id="txnIdGroup" class="hidden">
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Venmo Transaction ID</label>
+                    <input type="text" id="depositTxnId" placeholder="Enter Venmo Txn ID (e.g. 123456789)" class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition">
+                </div>
+
+                <!-- Deposit Screenshot (Mandatory) -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">
+                        Deposit Screenshot <span class="text-red-400">*</span>
+                    </label>
+                    <input type="file" id="depositScreenshot" accept="image/*" required onchange="previewImage(this, 'depositPreview')" class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-2.5 text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-yellow file:text-brand-navyDark hover:file:bg-brand-yellowHover cursor-pointer">
+                    <img id="depositPreview" class="mt-2 rounded-xl max-h-40 hidden border border-brand-border w-full object-cover">
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-brand-yellow hover:bg-brand-yellowHover text-brand-navyDark font-black rounded-xl transition duration-200 uppercase tracking-wider text-base shadow-lg mt-3">
+                    Submit Recharge Request
+                </button>
+            </form>
+
+            <!-- CASHOUT FORM -->
+            <form id="cashoutForm" onsubmit="handleFormSubmit(event, 'cashout')" class="space-y-4 hidden">
+                
+                <div class="bg-brand-yellow/10 border border-brand-yellow/30 p-3.5 rounded-xl text-xs text-gray-300">
+                    <p class="font-bold text-brand-yellow mb-1"><i class="fa-solid fa-shield-halved mr-1"></i> Cashout Notice:</p>
+                    <p>Make sure your payment tag and payment QR code match your cashout destination to prevent processing delays.</p>
+                </div>
+
+                <!-- Full Name -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input type="text" id="cashoutName" placeholder="Enter full name" required class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition">
+                </div>
+
+                <!-- Select Game -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Select Game Platform</label>
+                    <select id="cashoutGame" required class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition cursor-pointer">
+                        <option value="🐼 Ultra Thunder">🐼 Ultra Thunder</option>
+                        <option value="👑 Orion Stars">👑 Orion Stars</option>
+                        <option value="🌟 Juwa">🌟 Juwa</option>
+                        <option value="🔥 Juwa 2.0">🔥 Juwa 2.0</option>
+                        <option value="🏰 Game Vault">🏰 Game Vault</option>
+                        <option value="🎰 Vegas Sweeps">🎰 Vegas Sweeps</option>
+                        <option value="🔥 Fire Kirin">🔥 Fire Kirin</option>
+                        <option value="🐼 Panda Master">🐼 Panda Master</option>
+                        <option value="🌌 Milky Way">🌌 Milky Way</option>
+                        <option value="⚡ Dragon Fury">⚡ Dragon Fury</option>
+                        <option value="🎮 E-Game">🎮 E-Game</option>
+                        <option value="🚀 Orion Strike">🚀 Orion Strike</option>
+                        <option value="🎩 Mr. All in One">🎩 Mr. All in One</option>
+                        <option value="💎 Noble">💎 Noble</option>
+                        <option value="🎰 Cash Machine">🎰 Cash Machine</option>
+                    </select>
+                </div>
+
+                <!-- Game Username -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Game Username</label>
+                    <input type="text" id="cashoutUsername" placeholder="Enter game username" required class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition">
+                </div>
+
+                <!-- Amount to Cash Out -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Amount to Cash Out ($)</label>
+                    <input type="number" id="cashoutAmount" min="1" step="any" placeholder="e.g. 100" required class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition">
+                </div>
+
+                <!-- Preferred Payment Method -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Preferred Payment Method</label>
+                    <select id="cashoutPayment" required class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition cursor-pointer">
+                        <option value="venmo">Venmo</option>
+                        <option value="chime">Chime</option>
+                    </select>
+                </div>
+
+                <!-- Payment Tag -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">Your Payment Tag ($tag or @handle)</label>
+                    <input type="text" id="cashoutTag" placeholder="e.g. $MyChimeTag or @MyVenmoHandle" required class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-3 text-white focus:border-brand-yellow focus:outline-none transition">
+                </div>
+
+                <!-- MANDATORY Payment Tag QR Code -->
+                <div>
+                    <label class="block text-xs font-bold text-brand-yellow uppercase tracking-wider mb-1.5">
+                        Payment Tag QR Code <span class="text-red-400">* Required</span>
+                    </label>
+                    <input type="file" id="cashoutQr" accept="image/*" required onchange="previewImage(this, 'cashoutPreview')" class="w-full bg-brand-navyDark border border-brand-border rounded-xl p-2.5 text-xs text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-yellow file:text-brand-navyDark hover:file:bg-brand-yellowHover cursor-pointer">
+                    <img id="cashoutPreview" class="mt-2 rounded-xl max-h-40 hidden border border-brand-border w-full object-cover">
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-brand-yellow hover:bg-brand-yellowHover text-brand-navyDark font-black rounded-xl transition duration-200 uppercase tracking-wider text-base shadow-lg mt-3">
+                    Submit Cashout Request
+                </button>
+            </form>
+
+            <!-- Status Alert Container -->
+            <div id="statusMessage" class="hidden mt-4 p-4 rounded-xl text-center text-sm font-semibold"></div>
+
+        </div>
+    </div>
+
+    <script>
+        /* =========================================================================
+           CONFIGURATION: Insert your deployed Google Apps Script Web App URL below
+           ========================================================================= */
+        const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+
+        // Tab Switching Handler
+        function switchTab(tab) {
+            const rechargeForm = document.getElementById('rechargeForm');
+            const cashoutForm = document.getElementById('cashoutForm');
+            const tabRecharge = document.getElementById('tab-recharge');
+            const tabCashout = document.getElementById('tab-cashout');
+            const statusMsg = document.getElementById('statusMessage');
+
+            statusMsg.classList.add('hidden');
+
+            if (tab === 'recharge') {
+                rechargeForm.classList.remove('hidden');
+                cashoutForm.classList.add('hidden');
+                
+                tabRecharge.className = "flex-1 py-3.5 px-2 text-center font-bold text-brand-yellow border-b-4 border-brand-yellow bg-brand-navyCard transition-all flex items-center justify-center gap-2";
+                tabCashout.className = "flex-1 py-3.5 px-2 text-center font-bold text-gray-400 border-b-4 border-transparent hover:text-gray-200 transition-all flex items-center justify-center gap-2";
+            } else {
+                rechargeForm.classList.add('hidden');
+                cashoutForm.classList.remove('hidden');
+
+                tabCashout.className = "flex-1 py-3.5 px-2 text-center font-bold text-brand-yellow border-b-4 border-brand-yellow bg-brand-navyCard transition-all flex items-center justify-center gap-2";
+                tabRecharge.className = "flex-1 py-3.5 px-2 text-center font-bold text-gray-400 border-b-4 border-transparent hover:text-gray-200 transition-all flex items-center justify-center gap-2";
+            }
+        }
+
+        // One-Click Tag Copy Function
+        function copyTag(text, button) {
+            const tempInput = document.createElement("input");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fa-solid fa-check"></i> <span>Copied!</span>';
+            button.classList.replace("bg-brand-yellow", "bg-green-500");
+            button.classList.add("text-white");
+
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.classList.replace("bg-green-500", "bg-brand-yellow");
+                button.classList.remove("text-white");
+            }, 2000);
+        }
+
+        // Toggle Payment Tag View & Extra Inputs
+        function togglePaymentDetails() {
+            const method = document.getElementById('depositPayment').value;
+            const chime = document.getElementById('chimeDetails');
+            const venmo = document.getElementById('venmoDetails');
+            const txnGroup = document.getElementById('txnIdGroup');
+
+            if (method === 'venmo') {
+                chime.classList.add('hidden');
+                venmo.classList.remove('hidden');
+                txnGroup.classList.remove('hidden');
+            } else {
+                chime.classList.remove('hidden');
+                venmo.classList.add('hidden');
+                txnGroup.classList.add('hidden');
+            }
+        }
+
+        // Live Image Preview
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.classList.add('hidden');
+            }
+        }
+
+        // File to Base64 Encoder
+        function convertFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) {
+                    resolve("");
+                    return;
+                }
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Submit Handler
+        async function handleFormSubmit(event, type) {
+            event.preventDefault();
+            const statusMsg = document.getElementById('statusMessage');
+            
+            statusMsg.className = 'mt-4 p-4 rounded-xl text-center text-sm font-semibold bg-brand-yellow/20 text-brand-yellow border border-brand-yellow/40';
+            statusMsg.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Submitting request... Please wait.';
+            statusMsg.classList.remove('hidden');
+
+            let payload = { type: type };
+
+            try {
+                if (type === 'deposit') {
+                    const screenshotFile = document.getElementById('depositScreenshot').files[0];
+                    const base64Screenshot = await convertFileToBase64(screenshotFile);
+
+                    payload.fullName = document.getElementById('depositName').value;
+                    payload.paymentMethod = document.getElementById('depositPayment').value;
+                    payload.game = document.getElementById('depositGame').value;
+                    payload.username = document.getElementById('depositUsername').value;
+                    payload.amount = document.getElementById('depositAmount').value;
+                    payload.transactionId = document.getElementById('depositTxnId').value || "N/A";
+                    payload.screenshotData = base64Screenshot;
+                } else {
+                    const qrFile = document.getElementById('cashoutQr').files[0];
+                    const base64Qr = await convertFileToBase64(qrFile);
+
+                    payload.fullName = document.getElementById('cashoutName').value;
+                    payload.game = document.getElementById('cashoutGame').value;
+                    payload.username = document.getElementById('cashoutUsername').value;
+                    payload.amount = document.getElementById('cashoutAmount').value;
+                    payload.paymentMethod = document.getElementById('cashoutPayment').value;
+                    payload.paymentTag = document.getElementById('cashoutTag').value;
+                    payload.qrData = base64Qr;
+                }
+
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                statusMsg.className = 'mt-4 p-4 rounded-xl text-center text-sm font-semibold bg-green-900/40 text-green-400 border border-green-500/50';
+                statusMsg.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> Request submitted successfully! We will verify and notify you on Facebook.';
+
+                if (type === 'deposit') {
+                    document.getElementById('rechargeForm').reset();
+                    document.getElementById('depositPreview').classList.add('hidden');
+                    togglePaymentDetails();
+                } else {
+                    document.getElementById('cashoutForm').reset();
+                    document.getElementById('cashoutPreview').classList.add('hidden');
+                }
+
+            } catch (error) {
+                statusMsg.className = 'mt-4 p-4 rounded-xl text-center text-sm font-semibold bg-red-900/40 text-red-400 border border-red-500/50';
+                statusMsg.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i> Failed to submit request. Please try again.';
+            }
+        }
+    </script>
+</body>
+</html>
