@@ -482,7 +482,7 @@
             });
 
             statusMsg.className = 'status-msg success';
-            statusMsg.textContent = 'Request submitted successfully! We will process it shortly.';
+            statusMsg.textContent = 'We got your details, will inform you once loaded.';
             document.getElementById(type === 'deposit' ? 'rechargeFormElem' : 'cashoutFormElem').reset();
         } catch(err) {
             statusMsg.textContent = 'Error submitting request. Please try again.';
